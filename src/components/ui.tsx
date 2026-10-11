@@ -34,6 +34,16 @@ export function TopBar({
   );
 }
 
+/** The way into the studio for 杨老师; the studio itself asks for the password. */
+export function StudioLink() {
+  return (
+    <a href="/manage" className={s.studioLink}>
+      <MicIcon size={15} />
+      录音室
+    </a>
+  );
+}
+
 export function EqBars({ height, width = 3 }: { height: number; width?: number }) {
   return (
     <span className={s.eq} style={{ height }}>

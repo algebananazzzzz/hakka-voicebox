@@ -11,7 +11,7 @@ import {
   ofKind,
   sealChar,
 } from '../lib/library';
-import { PlayState, SearchIcon, TopBar } from './ui';
+import { PlayState, SearchIcon, StudioLink, TopBar } from './ui';
 import s from './Words.module.css';
 
 const PREFS_KEY = 'hvb-settings';
@@ -119,6 +119,7 @@ export default function Words() {
       <TopBar seal={sealChar(name)} linkHome latin>
         <nav className={s.nav}>
           <a href="/">主页</a>
+          <StudioLink />
         </nav>
       </TopBar>
 

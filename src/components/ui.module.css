@@ -65,6 +65,23 @@ a.brand:hover {
   color: var(--faint);
 }
 
+.studio-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--chip-line);
+  background: var(--chip);
+  color: var(--red);
+  font-weight: 700;
+}
+
+.studio-link:hover {
+  background: var(--chip-hover);
+  color: var(--red-deep);
+}
+
 @media (max-width: 420px) {
   .latin {
     display: none;

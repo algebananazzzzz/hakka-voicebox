@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { mediaUrl, recordedCount, sealChar } from '../lib/library';
 import { useLibrary, usePlayer } from '../lib/hooks';
-import { PlayState, TopBar } from './ui';
+import { PlayState, StudioLink, TopBar } from './ui';
 import s from './Home.module.css';
 
 const GREETING = 'greeting';
@@ -39,6 +39,7 @@ export default function Home() {
       <TopBar seal={sealChar(name)} linkHome={false} latin>
         <nav className={s.nav}>
           <a href="/words">词库</a>
+          <StudioLink />
         </nav>
       </TopBar>
 
