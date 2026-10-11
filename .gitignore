@@ -1,0 +1,17 @@
+node_modules/
+.DS_Store
+dist/
+.astro/
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.env.example
+design-handoff/
+*.log
+.vscode/
+.idea/
+.playwright-mcp/
+
+# Root-level debug screenshots
+/*.png
