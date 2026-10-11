@@ -1,0 +1,25 @@
+name: 1. Feature Branch CI
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run check
+      # wrangler.jsonc points the Worker's assets at dist/, which must exist before the build.
+      - run: mkdir -p dist && npm test
+      - run: npm run build

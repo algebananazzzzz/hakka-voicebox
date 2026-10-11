@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "prd-web-worker-hakkavb",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-01",
+  // Only the API and media need code; every other path is the static Astro build.
+  "assets": {
+    "directory": "./dist",
+    "run_worker_first": ["/api/*", "/media/*"],
+  },
+  "r2_buckets": [{ "binding": "BUCKET", "bucket_name": "prd-db-bucket-hakkavb" }],
+  "routes": [{ "pattern": "hakka.algebananazzzzz.com", "custom_domain": true }],
+  "observability": { "enabled": true },
+}

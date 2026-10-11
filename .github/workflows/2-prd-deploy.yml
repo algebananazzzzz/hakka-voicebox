@@ -1,0 +1,52 @@
+name: 2. Production Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: prd-deploy
+  cancel-in-progress: false
+
+env:
+  BUCKET: prd-db-bucket-hakkavb
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prd
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run check
+      - run: mkdir -p dist && npm test
+      - run: npm run build
+
+      - name: Create the R2 bucket on first deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if npx wrangler r2 bucket info "$BUCKET" > /dev/null 2>&1; then
+            echo "$BUCKET exists"
+          else
+            npx wrangler r2 bucket create "$BUCKET"
+          fi
+
+      - name: Deploy the Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          MANAGE_PASSWORD: ${{ secrets.MANAGE_PASSWORD }}
+        run: |
+          test -n "$MANAGE_PASSWORD" || { echo "::error::MANAGE_PASSWORD secret is not set"; exit 1; }
+          secrets="$RUNNER_TEMP/secrets.json"
+          jq -n --arg pw "$MANAGE_PASSWORD" '{MANAGE_PASSWORD: $pw}' > "$secrets"
+          npx wrangler deploy --secrets-file "$secrets"
+          rm "$secrets"
